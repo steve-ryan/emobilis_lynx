@@ -2,10 +2,10 @@
 session_start();
 require_once ('./config.php');
 
-// if (isset($_SESSION["firstname"])) {
-//     # code...
-//     header("location:dashboard.php");
-// }
+if (isset($_SESSION["firstname"])) {
+    # code...
+    header("location:dashboard.php");
+}
 
 
 $email = mysqli_real_escape_string($conn,$_POST["email"]);
@@ -19,13 +19,15 @@ if (isset($_POST["login"])) {
         echo '<script>alert("Fill all fields")</script>';
     } else {
         # code...
-        $query = "SELECT * FROM users WHERE email = '$email' AND password = '$password'";
+        //selecting firstname from users table
+        $query = "SELECT firstname FROM users WHERE email = '$email' AND password = '$password'";
         $result = mysqli_query($conn,$query);
         if (mysqli_num_rows($result) > 0) {
+            //returns current row of a result
+            $obj = $result -> fetch_object();
             # code...
-             $firstname = $_SESSION['firstname'];
-            echo "$firstname";
-            // header("location:dashboard.php");
+             $_SESSION['firstname']= $obj->firstname;
+            header("location:dashboard.php");
         } else {
             # code...
             echo '<script>alert("Wrong credentials!")</script>';
